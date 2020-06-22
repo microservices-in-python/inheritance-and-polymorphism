@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: Inheritance and Polymorphism
+  version: '1.0'
+  description: Short example of Object Oriented features of Resource Data Models
+  contact:
+    name: API Support
+    url: 'https://support.example.com/apis'
+    email: support-apis@example.com
+  termsOfService: 'https://example.com/terms'
+  license:
+    name: Creative Commons 4.0
+    url: 'https://creativecommons.org/licenses/by/4.0/'
+servers:
+  - url: 'http://localhost:5000'
+paths: {}
+components:
+  schemas:
+    SharedAttributes:
+      title: Shared Attributes
+      type: object
+      description: Resource Super Class. Declares attributes shared by all other Resources.
+      properties:
+        id:
+          type: integer
+          example: 123
+          minimum: 0
+          description: Unique Resource id
+        kind:
+          type: string
+          description: Unique name of Resource Data Model (schema)
+          example: User
+    User:
+      title: User
+      description: Example User Resource Data Model inheriting from SharedAttributes
+      allOf:
+        - $ref: '#/components/schemas/SharedAttributes'
+        - type: object
+          properties:
+            username:
+              type: string
+            firstname:
+              type: string
+            lastname:
+              type: string
+            contact:
+              type: object
+              properties:
+                email:
+                  type: string
+                phone:
+                  type: string
+    Group:
+      title: Group
+      description: Example Group Resource Data Model inheriting from SharedAttributes
+      allOf:
+        - $ref: '#/components/schemas/SharedAttributes'
+        - type: object
+          properties:
+            groupname:
+              type: string
+            description:
+              type: string
+    GitHubUser:
+      title: GitHubUser
+      type: object
+      description: GitHub User attributes
+      properties:
+        account:
+          type: string
+          description: GitHub Account name
+        url:
+          type: string
+          description: GitHub URL
+    Developer:
+      title: Developer
+      description: User + GitHubUser
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/GitHubUser'
+    PolyModel:
+      title: PolyObject
+      description: |-
+        Example of polymorphism.
+        PolyObject is either a User, Group or Developer.
+      oneOf:
+        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/Group'
+        - $ref: '#/components/schemas/Developer'
